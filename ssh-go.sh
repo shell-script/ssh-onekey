@@ -199,9 +199,10 @@ function data_processing(){
 			echo -e "${ok_font}现SSH监听端口：${green_backgroundcolor}${ssh_new_listenport}${default_fontcolor}"
 		fi
 	elif [[ ${determine_type} = "2" ]]; then
-		stty erase '^H' && read -p "请输入连接密码(默认：${default_ssh_key_password})：" ssh_connect_password
+		default_ssh_password=$(cat /proc/sys/kernel/random/uuid)
+		stty erase '^H' && read -p "请输入连接密码(默认：${default_ssh_password})：" ssh_connect_password
 		if [[ ${ssh_connect_password} = "" ]]; then
-			ssh_connect_password=${default_ssh_key_password}
+			ssh_connect_password=${default_ssh_password}
 			echo -e "${ok_font}处理成功。"
 		else
 			echo -e "${ok_font}处理成功。"
