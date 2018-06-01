@@ -21,11 +21,9 @@ ok_font="${green_fontcolor}[OK]${default_fontcolor}"
 
 function check_os(){
 	clear
-	# Check root user
 	echo -e "正在检测当前是否为ROOT用户..."
 	if [[ $EUID -ne 0 ]]; then
 		sudo su
-		check_os
 		clear
 		echo -e "${error_font}当前并非ROOT用户，请先切换到ROOT用户后再使用本脚本。"
 		exit 1
@@ -33,7 +31,6 @@ function check_os(){
 		clear
 		echo -e "${ok_font}检测到当前为Root用户。"
 	fi
-	# Check OS type
 	clear
 	echo -e "正在检测此OS是否被支持..."
 	if [ ! -z "$(cat /etc/issue | grep Debian)" ];then
@@ -249,6 +246,8 @@ function data_processing(){
 			exit 1
 		fi
 		clear
+		restart_service
+		clear
 		echo -e "${ok_font}This is your SSH login password:\n${green_backgroundcolor}${ssh_connect_password}${default_fontcolor}"
 	elif [[ ${determine_type} = "3" ]]; then
 		stty erase '^H' && read -p "请输入私钥类型(默认：ecdsa，仅支持rsa和ecdsa)：" ssh_key_type
@@ -374,6 +373,8 @@ function data_processing(){
 		fi
 		clear
 		echo -e "${ok_font}公钥登录设定完毕。"
+		clear
+		restart_service
 		clear
 		echo -e "${ok_font}This is your SSH public key:\n${green_backgroundcolor}$(cat ~/.ssh/authorized_keys)${default_fontcolor}"
 		echo -e "\n${ok_font}This is your SSH private key:\n${green_backgroundcolor}$(cat ~/.ssh/private_keys)${default_fontcolor}"
